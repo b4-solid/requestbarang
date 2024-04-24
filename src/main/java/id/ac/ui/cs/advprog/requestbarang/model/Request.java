@@ -7,6 +7,7 @@ import lombok.Builder;
 @Builder
 @Getter
 public class Request {
+    private String id;
     private String name;
     private String imageLink;
     private double price;
@@ -15,9 +16,10 @@ public class Request {
     @Setter
     private String status;
 
-    public Request(String name, String imageLink, double price, String currency, String storeLink) {
+    public Request(String id, String name, String imageLink, double price, String currency, String storeLink) {
     }
 
-    public Request(String name, String imageLink, double price, String currency, String storeLink, String status) {
+    public Request(String id, String name, String imageLink, double price, String currency, String storeLink,
+            String status) {
     }
 }
