@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import java.util.Arrays;
 
+import id.ac.ui.cs.advprog.requestbarang.enums.RequestStatus;
 import lombok.Builder;
 
 @Builder
@@ -26,7 +27,7 @@ public class Request {
         this.price = price;
         this.currency = currency;
         this.storeLink = storeLink;
-        this.status = "Requesting";
+        this.status = RequestStatus.REQUESTING.getValue();
     }
 
     public Request(String id, String name, String imageLink, double price, String currency, String storeLink,
@@ -37,13 +38,7 @@ public class Request {
         this.price = price;
         this.currency = currency;
         this.storeLink = storeLink;
-
-        String[] statusList = { "Requesting", "On Sale" };
-        if (Arrays.stream(statusList).noneMatch(item -> (item.equals(status)))) {
-            throw new IllegalArgumentException();
-        } else {
-            this.status = status;
-        }
+        this.status = status;
 
     }
 }
