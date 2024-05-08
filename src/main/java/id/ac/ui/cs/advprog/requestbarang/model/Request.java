@@ -11,6 +11,7 @@ import lombok.Builder;
 @Builder
 @Getter
 public class Request {
+    private static int counter = 1;
     private String id;
     private String name;
     private String imageLink;
@@ -21,7 +22,7 @@ public class Request {
     private String status;
 
     public Request(String id, String name, String imageLink, double price, String currency, String storeLink) {
-        this.id = id;
+        this.id = generateId();
         this.name = name;
         this.imageLink = imageLink;
         this.price = price;
@@ -32,7 +33,7 @@ public class Request {
 
     public Request(String id, String name, String imageLink, double price, String currency, String storeLink,
             String status) {
-        this.id = id;
+        this.id = generateId();
         this.name = name;
         this.imageLink = imageLink;
         this.price = price;
@@ -40,5 +41,11 @@ public class Request {
         this.storeLink = storeLink;
         this.status = status;
 
+    }
+
+    private static String generateId() {
+        String requestId = "R" + String.format("%03d", counter);
+        counter++;
+        return requestId;
     }
 }
