@@ -15,6 +15,6 @@ public class RequestController {
     @PostMapping("/create")
     public Request createRequest(@RequestParam String name, @RequestParam String imageLink, @RequestParam double price,
             @RequestParam String storeLink) {
-        return requestService.createAndProcessRequest(name, imageLink, price, storeLink);
+        return requestService.createAndProcessRequest(name, imageLink, price, storeLink, storeLink);
     }
 }
