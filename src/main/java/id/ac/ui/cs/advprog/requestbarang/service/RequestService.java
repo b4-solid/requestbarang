@@ -1,16 +1,22 @@
 package id.ac.ui.cs.advprog.requestbarang.service;
 
-import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.Optional;
 
-import id.ac.ui.cs.advprog.requestbarang.factory.RequestFactory;
-import id.ac.ui.cs.advprog.requestbarang.model.Request;
+import id.ac.ui.cs.advpro.requestbarang.models.Request;
 
-@Service
-public class RequestService {
-    public Request createAndProcessRequest(String name, String imageLink, double price, String currency,
-            String storeLink) {
-        int counter = 0;
-        Request request = RequestFactory.createRequest(name, imageLink, price, imageLink, currency, storeLink);
-        return request;
-    }
+public interface RequestService {
+
+    //C(reate)
+    Request addRequest(Request request);
+
+    //R(ead)
+    List<Request> findAllRequest();
+    Optional<Request> findById(Long id);
+
+    //U(pdate)
+    Request updateRequest(Request request);
+
+    //D(elete)
+    void deleteRequest(Long id);
 }
