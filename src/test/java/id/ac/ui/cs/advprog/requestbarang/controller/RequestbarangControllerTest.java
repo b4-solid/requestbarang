@@ -1,50 +1,83 @@
-package id.ac.ui.cs.advprog.requestbarang.controller;
-
-import id.ac.ui.cs.advprog.requestbarang.model.Request;
-import id.ac.ui.cs.advprog.requestbarang.service.RequestService;
+import id.ac.ui.cs.advprog.eshop.requestbarang.model.Request;
+import id.ac.ui.cs.advprog.eshop.requestbarang.service.RequestService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
-@ExtendWith(MockitoExtension.class)
-public class RequestControllerTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+
+class RequestControllerTest {
 
     @Mock
     private RequestService requestService;
 
-    @InjectMocks
     private RequestController requestController;
 
-    private MockMvc mockMvc;
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+
+        List<Request> requests = new ArrayList<>();
+        Request request1 = new Request();
+        request1.setRequestId(1L);
+        request1.setRequestName("Kaito Kid Figure");
+        request1.setRequestHarga(1000000);
+        requests.add(request1);
+
+        Request request2 = new Request();
+        request2.setRequestId(123L);
+        request2.setRequestName("Kaito Kid Keychain");
+        request2.setRequestHarga(100000);
+        requests.add(request2);
+
+        when(requestService.findById(1L)).thenReturn(request1);
+        when(requestService.findById(123L)).thenReturn(request2);
+        when(requestService.getAllRequests()).thenReturn(requests);
+    }
 
     @Test
-    public void testCreateRequest() throws Exception {
-        when(requestService.createAndProcessRequest(any(), any(), anyDouble(), any(), any()))
-                .thenReturn(new Request("Test Request", "testimage.jpg", 100.0, "http://example.com"));
+    void createRequest_ReturnsCreatedRequest() throws ExecutionException, InterruptedException {
+        Request request = new Request();
+        request.setRequestId(1L);
+        request.setRequestName("Test Request");
+        request.setRequestHarga(1000);
 
-        mockMvc = MockMvcBuilders.standaloneSetup(requestController).build();
-        
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/requests/create")
-                        .param("name", "Test Request")
-                        .param("imageLink", "testimage.jpg")
-                        .param("price", "100.0")
-                        .param("storeLink", "http://example.com")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value("Test Request"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.imageLink").value("testimage.jpg"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.price").value(100.0))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.storeLink").value("http://example.com"));
+        when(requestService.addRequest(request)).thenReturn(request);
+
+        CompletableFuture<ResponseEntity<Request>> futureResponseEntity = requestController.createRequest(request);
+        ResponseEntity<Request> responseEntity = futureResponseEntity.get();
+        assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
+        assertEquals(request, responseEntity.getBody());
     }
+
+    @Test
+    void findById_ReturnsFoundRequest() throws ExecutionException, InterruptedException {
+        CompletableFuture<ResponseEntity<Request>> futureResponseEntity = requestController.findById(1L);
+        ResponseEntity<Request> responseEntity = futureResponseEntity.get();
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(1L, responseEntity.getBody().getRequestId());
+        assertEquals("Kaito Kid Figure", responseEntity.getBody().getRequestName());
+        assertEquals(1000000, responseEntity.getBody().getRequestHarga());
+    }
+
+    @Test
+    void getAllRequests_ReturnsListOfRequests() throws ExecutionException, InterruptedException {
+        CompletableFuture<ResponseEntity<List<Request>>> futureResponseEntity = requestController.findAllRequests();
+        ResponseEntity<List<Request>> responseEntity = futureResponseEntity.get();
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(2, responseEntity.getBody().size());
+    }
+
+
 }
