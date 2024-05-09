@@ -59,7 +59,7 @@ public class Request {
     @Getter
     private Boolean status;
 
-    public Request(Long id, Long productId, int harga, String name, String deskripsi, String imageLink, String storeLink,
+    public Request(long id, long productId, int harga, String name, String deskripsi, String imageLink, String storeLink,
             String status) {
         this.id = id;
         this.productId = productId;
