@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 @RestController
@@ -33,20 +34,21 @@ public class RequestController {
     @Async
     public CompletableFuture<ResponseEntity<Request>> findById(@PathVariable Long requestId) {
         return CompletableFuture.supplyAsync(() -> {
-            Request request = requestService.findById(requestId);
-            if (request != null) {
-                return ResponseEntity.ok(request);
+            Optional<Request> optionalRequest = requestService.findById(requestId);
+            if (optionalRequest.isPresent()) {
+                return ResponseEntity.ok(optionalRequest.get());
             } else {
                 return ResponseEntity.notFound().build();
             }
         });
     }
 
+
     @GetMapping
     @Async
     public CompletableFuture<ResponseEntity<List<Request>>> findAllRequests() {
         return CompletableFuture.supplyAsync(() -> {
-            List<Request> requests = requestService.findAllRequests();
+            List<Request> requests = requestService.findAllRequest();
             if (!requests.isEmpty()) {
                 return ResponseEntity.ok(requests);
             } else {
