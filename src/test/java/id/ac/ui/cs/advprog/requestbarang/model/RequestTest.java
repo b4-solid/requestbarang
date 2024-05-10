@@ -1,3 +1,4 @@
+import id.ac.ui.cs.advprog.requestbarang.model.Request;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
