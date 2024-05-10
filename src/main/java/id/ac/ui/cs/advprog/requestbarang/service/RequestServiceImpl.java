@@ -1,4 +1,4 @@
-package id.ac.ui.cs.advprog.requestbarang.service.impl;
+package id.ac.ui.cs.advprog.requestbarang.service;
 
 import java.util.List;
 import java.util.Optional;
