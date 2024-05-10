@@ -1,12 +1,12 @@
-package id.ac.ui.cs.advpro.requestbarang.service.impl;
+package id.ac.ui.cs.advprog.requestbarang.service.impl;
 
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
-import id.ac.ui.cs.advpro.requestbarang.models.Request;
-import id.ac.ui.cs.advpro.requestbarang.repository.RequestRepository;
-import id.ac.ui.cs.advpro.requestbarang.service.RequestService;
+import id.ac.ui.cs.advprog.requestbarang.model.Request;
+import id.ac.ui.cs.advprog.requestbarang.repository.RequestRepository;
+import id.ac.ui.cs.advprog.requestbarang.service.RequestService;
 
 @Service
 public class RequestServiceImpl implements RequestService {
