@@ -60,7 +60,7 @@ public class Request {
     private Boolean status;
 
     public Request(long id, long productId, int harga, String name, String deskripsi, String imageLink, String storeLink,
-            String status) {
+            Boolean status) {
         this.id = id;
         this.productId = productId;
         this.harga=harga;
