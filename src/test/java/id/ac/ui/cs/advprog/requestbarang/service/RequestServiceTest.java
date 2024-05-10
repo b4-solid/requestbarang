@@ -1,3 +1,9 @@
+package id.ac.ui.cs.advprog.requestbarang.service;
+
+import id.ac.ui.cs.advprog.requestbarang.model.Request;
+import id.ac.ui.cs.advprog.requestbarang.service.RequestServiceImpl;
+import id.ac.ui.cs.advprog.requestbarang.repository.RequestRepository;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -5,13 +11,16 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
-public class RequestServiceImplTest {
+public class RequestServiceTest {
+
+    private List<Request> requests;
 
     @Mock
     private RequestRepository repository;
@@ -21,17 +30,17 @@ public class RequestServiceImplTest {
 
     @BeforeEach
     public void setUp() {
-        List<Request> requests = new ArrayList<>();
+        requests = new ArrayList<>();
         Request request1 = new Request();
-        request1.setRequestId(1L);
-        request1.setRequestName("Kaito Kid Figure");
-        request1.setRequestHarga(1000000);
+        request1.setId(1L);
+        request1.setName("Kaito Kid Figure");
+        request1.setHarga(1000000);
         requests.add(request1);
 
         Request request2 = new Request();
-        request2.setRequestId(123L);
-        request2.setRequestName("Kaito Kid Keychain");
-        request2.setRequestHarga(100000);
+        request2.setId(123L);
+        request2.setName("Kaito Kid Keychain");
+        request2.setHarga(100000);
         requests.add(request2);
     }
 
