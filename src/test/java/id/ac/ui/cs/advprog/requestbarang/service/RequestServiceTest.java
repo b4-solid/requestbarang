@@ -56,9 +56,6 @@ public class RequestServiceTest {
 
     @Test
     public void testFindAllRequest() {
-        List<Request> requests = requests;
-        when(repository.findAll()).thenReturn(requests);
-
         List<Request> allRequests = service.findAllRequest();
 
         assertEquals(2, allRequests.size());
@@ -70,8 +67,8 @@ public class RequestServiceTest {
         Request request = requests.get(1);
         doReturn(request).when(repository).findById(request.getId());
 
-        Request result = service.findById(request.getId());
-        assertEquals(request.getId(), result.getId());
+        Optional<Request> result = service.findById(request.getId());
+        assertEquals(request.getId(), result.get().getId());
     }
 
     @Test
