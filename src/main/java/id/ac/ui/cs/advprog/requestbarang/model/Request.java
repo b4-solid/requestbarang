@@ -2,17 +2,18 @@ package id.ac.ui.cs.advprog.requestbarang.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import jakarta.validation.constraints.*;
+import jakarta.validation.*;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
 import lombok.*;
 
-import id.ac.ui.cs.advprog.requestbarang.enums.RequestStatus;
 import lombok.Builder;
+
+import java.util.Set;
 
 @Entity
 @Getter @Setter
-@AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "RequestBarang")
 public class Request {
@@ -46,4 +47,27 @@ public class Request {
     @Column(name = "status")
     private Boolean status;
 
+    @Builder
+    public Request(long id, long productId, int harga, String name, String deskripsi, String imageLink, String storeLink, Boolean status) {
+        this.id = id;
+        this.productId = productId;
+        this.harga = harga;
+        this.name = name;
+        this.deskripsi = deskripsi;
+        this.imageLink = imageLink;
+        this.storeLink = storeLink;
+        this.status = status;
+
+        // Manually trigger validation
+        validate();
+    }
+
+    private void validate() {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+        Set<ConstraintViolation<Request>> violations = validator.validate(this);
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException(violations);
+        }
+    }
 }
