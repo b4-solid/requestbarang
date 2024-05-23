@@ -1,9 +1,12 @@
+package id.ac.ui.cs.advprog.requestbarang.controller;
+
 import id.ac.ui.cs.advprog.requestbarang.model.Request;
 import id.ac.ui.cs.advprog.requestbarang.service.RequestService;
 import id.ac.ui.cs.advprog.requestbarang.controller.RequestController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +25,7 @@ class RequestControllerTest {
     @Mock
     private RequestService requestService;
 
+    @InjectMocks
     private RequestController requestController;
 
     @BeforeEach

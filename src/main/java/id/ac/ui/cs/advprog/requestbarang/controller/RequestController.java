@@ -26,7 +26,7 @@ public class RequestController {
     public CompletableFuture<ResponseEntity<Request>> createRequest(@RequestBody Request request) {
         return CompletableFuture.supplyAsync(() -> {
             Request savedRequest = requestService.addRequest(request);
-            return ResponseEntity.status(HttpStatus.CREATED).body(savedRequest);
+            return new ResponseEntity<>(savedRequest, HttpStatus.CREATED);
         });
     }
 

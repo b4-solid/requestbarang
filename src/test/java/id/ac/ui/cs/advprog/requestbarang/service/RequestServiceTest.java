@@ -3,6 +3,8 @@ package id.ac.ui.cs.advprog.requestbarang.service;
 import id.ac.ui.cs.advprog.requestbarang.model.Request;
 import id.ac.ui.cs.advprog.requestbarang.service.RequestServiceImpl;
 import id.ac.ui.cs.advprog.requestbarang.repository.RequestRepository;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,42 +18,52 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 public class RequestServiceTest {
-
-    private List<Request> requests;
+    @InjectMocks
+    private RequestServiceImpl service;
 
     @Mock
     private RequestRepository repository;
 
-    @InjectMocks
-    private RequestServiceImpl service;
+
+
 
     @BeforeEach
     public void setUp() {
-        requests = new ArrayList<>();
         Request request1 = new Request();
         request1.setId(1L);
         request1.setName("Kaito Kid Figure");
         request1.setHarga(1000000);
-        requests.add(request1);
+        service.addRequest(request1);
 
         Request request2 = new Request();
         request2.setId(123L);
         request2.setName("Kaito Kid Keychain");
         request2.setHarga(100000);
-        requests.add(request2);
+        service.addRequest(request2);
     }
 
     @Test
     public void testAddRequest() {
-        Request request = requests.get(0);
-        doReturn(request).when(repository).save(request);
+        Request request1 = new Request();
+        request1.setId(1L);
+        request1.setName("Kaito Kid Figure");
+        request1.setHarga(1000000);
+        service.addRequest(request1);
 
-        Request result = service.addRequest(request);
-        verify(repository, times(1)).save(request);
-        assertEquals(request.getId(), result.getId());
+        Request request2 = new Request();
+        request2.setId(123L);
+        request2.setName("Kaito Kid Keychain");
+        request2.setHarga(100000);
+        service.addRequest(request2);
+        //Request request_new = new Request(1L, 1L, 10000, "pulpen kaito kid", "pulpen sarasa", "image", "toko", false);
+        //service.addRequest(request_new);
+        //verify(repository).save(request2);
+        assertEquals(3, service.findAllRequest().size());
     }
 
     @Test
@@ -64,10 +76,11 @@ public class RequestServiceTest {
 
     @Test
     public void testFindById() {
-        Request request = requests.get(1);
-        doReturn(request).when(repository).findById(request.getId());
+        Request request = new Request(1L, 1L, 10000, "pulpen kaito kid", "pulpen sarasa", "image", "toko", false);
+        doReturn(Optional.of(request)).when(repository).findById(request.getId());
 
         Optional<Request> result = service.findById(request.getId());
+        assertTrue(result.isPresent());
         assertEquals(request.getId(), result.get().getId());
     }
 
