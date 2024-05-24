@@ -29,7 +29,11 @@ public class Request {
 
     @Column(name = "harga")
     @NotNull
-    private int harga;
+    private double harga;
+
+    @Column(name = "currency")
+    @NotNull
+    private String currency;
 
     @Column(name = "name")
     @NotNull
@@ -48,10 +52,11 @@ public class Request {
     private Boolean status;
 
     @Builder
-    public Request(long id, long productId, int harga, String name, String deskripsi, String imageLink, String storeLink, Boolean status) {
+    public Request(long id, long productId, int harga, String currency, String name, String deskripsi, String imageLink, String storeLink, Boolean status) {
         this.id = id;
         this.productId = productId;
         this.harga = harga;
+        this.currency = currency;
         this.name = name;
         this.deskripsi = deskripsi;
         this.imageLink = imageLink;

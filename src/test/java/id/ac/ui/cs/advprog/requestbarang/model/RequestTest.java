@@ -14,6 +14,7 @@ public class RequestTest {
                 1L,
                 123L,
                 1000000,
+                "IDR",
                 "Kaito Kid Figure",
                 "Figur kaito kid keren real",
                 "image.jpg",
@@ -24,6 +25,7 @@ public class RequestTest {
         assertEquals(1L, request.getId());
         assertEquals(123L, request.getProductId());
         assertEquals(1000000, request.getHarga());
+        assertEquals("IDR", request.getCurrency());
         assertEquals("Kaito Kid Figure", request.getName());
         assertEquals("Figur kaito kid keren real", request.getDeskripsi());
         assertEquals("image.jpg", request.getImageLink());
@@ -38,6 +40,7 @@ public class RequestTest {
                     1L,
                     123L,
                     100,
+                    "IDR",
                     null, // null name
                     "Figur kaito kid keren real",
                     "image.jpg",
