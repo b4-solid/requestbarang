@@ -19,4 +19,7 @@ public interface RequestService {
 
     //D(elete)
     void deleteRequest(Long id);
+
+    //Currency converter
+    public double getRate(String baseCurrency);
 }
