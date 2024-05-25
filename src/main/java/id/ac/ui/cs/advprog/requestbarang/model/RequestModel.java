@@ -77,9 +77,4 @@ public class RequestModel {
             throw new ConstraintViolationException(violations);
         }
     }
-
-    interface ProjectIdAndName{
-        String getId();
-        String getName();
-    }
 }
