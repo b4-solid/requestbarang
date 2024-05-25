@@ -1,8 +1,7 @@
 package id.ac.ui.cs.advprog.requestbarang.controller;
 
-import id.ac.ui.cs.advprog.requestbarang.model.Request;
+import id.ac.ui.cs.advprog.requestbarang.model.RequestModel;
 import id.ac.ui.cs.advprog.requestbarang.service.RequestService;
-import id.ac.ui.cs.advprog.requestbarang.controller.RequestController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -18,7 +17,6 @@ import java.util.concurrent.ExecutionException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
-import static org.mockito.ArgumentMatchers.any;
 
 class RequestControllerTest {
 
@@ -32,14 +30,14 @@ class RequestControllerTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        List<Request> requests = new ArrayList<>();
-        Request request1 = new Request();
+        List<RequestModel> requests = new ArrayList<>();
+        RequestModel request1 = new RequestModel();
         request1.setId(1L);
         request1.setName("Kaito Kid Figure");
         request1.setHarga(1000000);
         requests.add(request1);
 
-        Request request2 = new Request();
+        RequestModel request2 = new RequestModel();
         request2.setId(123L);
         request2.setName("Kaito Kid Keychain");
         request2.setHarga(100000);
@@ -52,23 +50,23 @@ class RequestControllerTest {
 
     @Test
     void createRequest_ReturnsCreatedRequest() throws ExecutionException, InterruptedException {
-        Request request = new Request();
+        RequestModel request = new RequestModel();
         request.setId(1L);
         request.setName("Test Request");
         request.setHarga(1000);
 
         when(requestService.addRequest(request)).thenReturn(request);
 
-        CompletableFuture<ResponseEntity<Request>> futureResponseEntity = requestController.createRequest(request);
-        ResponseEntity<Request> responseEntity = futureResponseEntity.get();
+        CompletableFuture<ResponseEntity<RequestModel>> futureResponseEntity = requestController.createRequest(request);
+        ResponseEntity<RequestModel> responseEntity = futureResponseEntity.get();
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
         assertEquals(request, responseEntity.getBody());
     }
 
     @Test
     void findById_ReturnsFoundRequest() throws ExecutionException, InterruptedException {
-        CompletableFuture<ResponseEntity<Request>> futureResponseEntity = requestController.findById(1L);
-        ResponseEntity<Request> responseEntity = futureResponseEntity.get();
+        CompletableFuture<ResponseEntity<RequestModel>> futureResponseEntity = requestController.findById(1L);
+        ResponseEntity<RequestModel> responseEntity = futureResponseEntity.get();
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(1L, responseEntity.getBody().getId());
@@ -78,8 +76,8 @@ class RequestControllerTest {
 
     @Test
     void getAllRequests_ReturnsListOfRequests() throws ExecutionException, InterruptedException {
-        CompletableFuture<ResponseEntity<List<Request>>> futureResponseEntity = requestController.findAllRequests();
-        ResponseEntity<List<Request>> responseEntity = futureResponseEntity.get();
+        CompletableFuture<ResponseEntity<List<RequestModel>>> futureResponseEntity = requestController.findAllRequests();
+        ResponseEntity<List<RequestModel>> responseEntity = futureResponseEntity.get();
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(2, responseEntity.getBody().size());

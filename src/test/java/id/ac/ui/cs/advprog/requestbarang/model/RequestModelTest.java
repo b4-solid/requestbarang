@@ -7,12 +7,13 @@ import org.junit.jupiter.api.Test;
 
 import jakarta.validation.ConstraintViolationException;
 
-public class RequestTest {
+public class RequestModelTest {
     @Test
     public void testNewRequest() {
-        Request request = new Request(
+        RequestModel request = new RequestModel(
                 1L,
                 123L,
+                "Dummy",
                 1000000,
                 "IDR",
                 "Kaito Kid Figure",
@@ -36,9 +37,10 @@ public class RequestTest {
     @Test
     public void testNullName() {
         assertThrows(ConstraintViolationException.class, () -> {
-            new Request(
+            new RequestModel(
                     1L,
                     123L,
+                    "Dummy",
                     100,
                     "IDR",
                     null, // null name
