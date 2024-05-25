@@ -1,11 +1,8 @@
 package id.ac.ui.cs.advprog.requestbarang.service;
 
 import id.ac.ui.cs.advprog.requestbarang.model.Request;
-import id.ac.ui.cs.advprog.requestbarang.service.RequestServiceImpl;
 import id.ac.ui.cs.advprog.requestbarang.repository.RequestRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.client.RestTemplate;
 
@@ -14,7 +11,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import java.util.*;
 
