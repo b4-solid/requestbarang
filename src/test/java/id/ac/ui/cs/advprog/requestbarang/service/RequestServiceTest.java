@@ -1,7 +1,8 @@
 package id.ac.ui.cs.advprog.requestbarang.service;
 
-import id.ac.ui.cs.advprog.requestbarang.model.Request;
+import id.ac.ui.cs.advprog.requestbarang.model.RequestModel;
 import id.ac.ui.cs.advprog.requestbarang.repository.RequestRepository;
+import id.ac.ui.cs.advprog.requestbarang.service.impl.RequestServiceImpl;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.client.RestTemplate;
@@ -11,7 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -29,31 +29,43 @@ public class RequestServiceTest {
     private RestTemplate restTemplate;
 
 
-    private Request request1;
-    private Request request2;
+    private RequestModel request1;
+    private RequestModel request2;
 
 
     @BeforeEach
     public void setUp() {
-        request1 = new Request();
+        request1 = new RequestModel();
         request1.setId(1L);
         request1.setName("Kaito Kid Figure");
         request1.setHarga(1000000);
         request1.setCurrency("IDR");
+        request1.setProductId(123L);
+        request1.setUsername("user123");
+        request1.setDeskripsi("ori");
+        request1.setImageLink("image.com");
+        request1.setStoreLink("store.com");
+        request1.setStatus(false);
         service.addRequest(request1);
 
-        request2 = new Request();
+        request2 = new RequestModel();
         request2.setId(123L);
         request2.setName("Kaito Kid Keychain");
         request2.setHarga(100000);
         request2.setCurrency("IDR");
+        request2.setProductId(123L);
+        request2.setUsername("user123");
+        request2.setDeskripsi("lucu");
+        request2.setImageLink("image.com");
+        request2.setStoreLink("store.com");
+        request2.setStatus(false);
         service.addRequest(request2);
     }
 
     @Test
     public void testAddRequest() {
         // Prepare test data
-        Request request = new Request();
+        RequestModel request = new RequestModel();
         request.setHarga(100);
         request.setCurrency("USD");
 
@@ -68,16 +80,16 @@ public class RequestServiceTest {
         when(repository.save(request)).thenReturn(request);
 
         // Perform the test
-        Request savedRequest = service.addRequest(request);
+        RequestModel savedRequest = service.addRequest(request);
 
         // Assert the result
-        assertEquals(0.01, savedRequest.getHarga(), 0.001); // Expected conversion: 100 * 0.0001 = 0.01 IDR
+        assertEquals(1000000, savedRequest.getHarga(), 0.001); // Expected conversion: 100 / 0.0001 = 1000000 IDR
     }
 
     @Test
     public void testFindAllRequest() {
         when(repository.findAll()).thenReturn(Arrays.asList(request1, request2));
-        List<Request> allRequests = service.findAllRequest();
+        List<RequestModel> allRequests = service.findAllRequest();
 
         assertEquals(2, allRequests.size());
         verify(repository, times(1)).findAll();
@@ -85,21 +97,21 @@ public class RequestServiceTest {
 
     @Test
     public void testFindById() {
-        Request request = new Request(1L, 1L, 10000, "IDR", "pulpen kaito kid", "pulpen sarasa", "image", "toko", false);
+        RequestModel request = new RequestModel(1L, 1L, "Dummy", 10000, "IDR", "pulpen kaito kid", "pulpen sarasa", "image", "toko", false);
         doReturn(Optional.of(request)).when(repository).findById(request.getId());
 
-        Optional<Request> result = service.findById(request.getId());
+        Optional<RequestModel> result = service.findById(request.getId());
         assertTrue(result.isPresent());
         assertEquals(request.getId(), result.get().getId());
     }
 
     @Test
     public void testUpdateRequest() {
-        Request request = new Request();
+        RequestModel request = new RequestModel();
         request.setCurrency("IDR");
         when(repository.save(request)).thenReturn(request);
 
-        Request updatedRequest = service.updateRequest(request);
+        RequestModel updatedRequest = service.updateRequest(request);
         updatedRequest.setCurrency("JPY");
 
         assertEquals(request, updatedRequest);
@@ -124,7 +136,7 @@ public class RequestServiceTest {
         when(restTemplate.getForObject("https://api.exchangerate-api.com/v4/latest/IDR", Map.class)).thenReturn(mockResponse);
 
         double convertedPrice = service.convertToIDR(100, "USD");
-        assertEquals(0.01, convertedPrice, 0.001);
+        assertEquals(1000000, convertedPrice, 0.001);
     }
 
     @Test
@@ -136,7 +148,7 @@ public class RequestServiceTest {
         when(restTemplate.getForObject("https://api.exchangerate-api.com/v4/latest/IDR", Map.class)).thenReturn(mockResponse);
 
         double convertedPrice = service.convertToIDR(100, "JPY");
-        assertEquals(0.95, convertedPrice, 0.001);
+        assertEquals(10526.3157, convertedPrice, 0.001);
     }
 
 }

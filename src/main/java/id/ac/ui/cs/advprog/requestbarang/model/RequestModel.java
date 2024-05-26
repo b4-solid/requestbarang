@@ -1,14 +1,10 @@
 package id.ac.ui.cs.advprog.requestbarang.model;
 
-import lombok.Getter;
-import lombok.Setter;
 import jakarta.validation.constraints.*;
 import jakarta.validation.*;
 
 import jakarta.persistence.*;
 import lombok.*;
-
-import lombok.Builder;
 
 import java.util.Set;
 
@@ -16,7 +12,7 @@ import java.util.Set;
 @Getter @Setter
 @NoArgsConstructor
 @Table(name = "RequestBarang")
-public class Request {
+public class RequestModel {
 
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
@@ -27,9 +23,13 @@ public class Request {
     @Column(name = "product_id")
     private long productId;
 
+    @Column(name = "username")
+    @NotNull
+    private String username;
+
     @Column(name = "harga")
     @NotNull
-    private double harga;
+    private int harga;
 
     @Column(name = "currency")
     @NotNull
@@ -46,15 +46,17 @@ public class Request {
     private String imageLink;
 
     @Column(name = "store_link")
+    @NotNull
     private String storeLink;
 
     @Column(name = "status")
     private Boolean status;
 
     @Builder
-    public Request(long id, long productId, int harga, String currency, String name, String deskripsi, String imageLink, String storeLink, Boolean status) {
+    public RequestModel(long id, long productId, String username, int harga, String currency, String name, String deskripsi, String imageLink, String storeLink, Boolean status) {
         this.id = id;
         this.productId = productId;
+        this.username = username;
         this.harga = harga;
         this.currency = currency;
         this.name = name;
@@ -70,7 +72,7 @@ public class Request {
     private void validate() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
-        Set<ConstraintViolation<Request>> violations = validator.validate(this);
+        Set<ConstraintViolation<RequestModel>> violations = validator.validate(this);
         if (!violations.isEmpty()) {
             throw new ConstraintViolationException(violations);
         }

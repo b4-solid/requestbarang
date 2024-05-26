@@ -1,4 +1,4 @@
-package id.ac.ui.cs.advprog.requestbarang.service;
+package id.ac.ui.cs.advprog.requestbarang.service.impl;
 
 import java.util.List;
 import java.util.Map;
@@ -7,8 +7,10 @@ import java.math.BigDecimal;
 import java.util.Currency;
 
 import org.springframework.stereotype.Service;
-import id.ac.ui.cs.advprog.requestbarang.model.Request;
+import id.ac.ui.cs.advprog.requestbarang.model.RequestModel;
 import id.ac.ui.cs.advprog.requestbarang.repository.RequestRepository;
+import id.ac.ui.cs.advprog.requestbarang.service.RequestService;
+
 import org.springframework.web.client.RestTemplate;
 
 
@@ -26,32 +28,36 @@ public class RequestServiceImpl implements RequestService {
 
     //C(reate)
     @Override
-    public Request addRequest(Request request) {
+    public RequestModel addRequest(RequestModel request) {
         validateCurrency(request.getCurrency());
         double convertedHarga = convertToIDR(request.getHarga(), request.getCurrency());
-        request.setHarga(convertedHarga);
+        request.setHarga((int) Math.ceil(convertedHarga));
         return repository.save(request);
     }
 
     //R(ead)
     @Override
-    public List<Request> findAllRequest() {
+    public List<RequestModel> findAllRequest() {
         return repository.findAll();
     }
 
     @Override
-    public Optional<Request> findById(Long id) {
+    public Optional<RequestModel> findById(Long id) {
         return repository.findById(id);
+    }
+
+    @Override
+    public List<RequestModel> findByUsername(String username) {
+        return repository.findByUsername(username);
     }
 
 
     //U(pdate)
     @Override
-    public Request updateRequest(Request request) {
+    public RequestModel updateRequest(RequestModel request) {
         validateCurrency(request.getCurrency());
-        double convertedPrice = convertToIDR(request.getHarga(), request.getCurrency());
-        request.setHarga(convertedPrice);
-        request.setId(request.getId());
+        double convertedHarga = convertToIDR(request.getHarga(), request.getCurrency());
+        request.setHarga((int) Math.ceil(convertedHarga));
         return repository.save(request);
     }
 
@@ -64,12 +70,13 @@ public class RequestServiceImpl implements RequestService {
     //Currency converter
     private void validateCurrency(String currencyCode) {
         try {
-            Currency currency = Currency.getInstance(currencyCode);
+            Currency.getInstance(currencyCode);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Invalid currency code");
         }
     }
 
+    @SuppressWarnings("unchecked")
     public double getRate(String currencyCode) {
         Map<String, Object> response = restTemplate.getForObject(API_URL, Map.class);
 
@@ -93,7 +100,7 @@ public class RequestServiceImpl implements RequestService {
             return price;
         } else {
             double rate = getRate(currencyCode);
-            return price * rate;
+            return price / rate;
         }
     }
 }
