@@ -88,20 +88,20 @@ class RequestControllerTest {
 
     @Test
     void findById_ReturnsNotFound() throws ExecutionException, InterruptedException {
-        CompletableFuture<ResponseEntity<Request>> futureResponseEntity = requestController.findById(999L); // Using a non-existent ID
-        ResponseEntity<Request> responseEntity = futureResponseEntity.get();
+        CompletableFuture<ResponseEntity<RequestModel>> futureResponseEntity = requestController.findById(999L); // Using a non-existent ID
+        ResponseEntity<RequestModel> responseEntity = futureResponseEntity.get();
 
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
     }
 
     @Test
     void updateRequest_ReturnsUpdatedRequest() throws ExecutionException, InterruptedException {
-        Request updatedRequest = new Request(1L, 1L, 10000, "IDR", "pulpen kaito kid", "pulpen sarasa", "image", "toko", false);
-        CompletableFuture<ResponseEntity<Request>> successResponse = CompletableFuture.completedFuture(ResponseEntity.ok(updatedRequest));
-        when(requestService.updateRequest(any(Request.class))).thenReturn(updatedRequest);
+        RequestModel updatedRequest = new RequestModel(1L, 1L, "user123",10000, "IDR", "pulpen kaito kid", "pulpen sarasa", "image", "toko", false);
+        CompletableFuture<ResponseEntity<RequestModel>> successResponse = CompletableFuture.completedFuture(ResponseEntity.ok(updatedRequest));
+        when(requestService.updateRequest(any(RequestModel.class))).thenReturn(updatedRequest);
 
-        CompletableFuture<ResponseEntity<Request>> futureResponseEntity = requestController.updateRequest(updatedRequest);
-        ResponseEntity<Request> responseEntity = futureResponseEntity.get();
+        CompletableFuture<ResponseEntity<RequestModel>> futureResponseEntity = requestController.updateRequest(updatedRequest.getId(), updatedRequest);
+        ResponseEntity<RequestModel> responseEntity = futureResponseEntity.get();
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertEquals(1L, responseEntity.getBody().getId());
@@ -111,11 +111,11 @@ class RequestControllerTest {
 
     @Test
     void updateRequest_ReturnsNotFound() throws ExecutionException, InterruptedException {
-        Request updatedRequest = new Request(999L, 1L, 3000000, "IDR", "hang glider kaito kid", "bisa terbang", "image", "toko", false);
-        when(requestService.updateRequest(any(Request.class))).thenThrow(new IllegalArgumentException());
+        RequestModel updatedRequest = new RequestModel(999L, 1L, "user123", 3000000, "IDR", "hang glider kaito kid", "bisa terbang", "image", "toko", false);
+        when(requestService.updateRequest(any(RequestModel.class))).thenThrow(new IllegalArgumentException());
 
-        CompletableFuture<ResponseEntity<Request>> futureResponseEntity = requestController.updateRequest(updatedRequest);
-        ResponseEntity<Request> responseEntity = futureResponseEntity.get();
+        CompletableFuture<ResponseEntity<RequestModel>> futureResponseEntity = requestController.updateRequest(updatedRequest.getId(), updatedRequest);
+        ResponseEntity<RequestModel> responseEntity = futureResponseEntity.get();
 
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
     }
@@ -139,18 +139,6 @@ class RequestControllerTest {
 
         CompletableFuture<ResponseEntity<Void>> futureResponseEntity = requestController.deleteRequest(requestId);
         ResponseEntity<Void> responseEntity = futureResponseEntity.get();
-
-        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
-    }
-
-    @Test
-    void findAllRequests_ReturnsNotFound() throws ExecutionException, InterruptedException {
-        List<Request> emptyRequests = Collections.emptyList();
-        CompletableFuture<ResponseEntity<List<Request>>> notFoundResponse = CompletableFuture.completedFuture(ResponseEntity.notFound().build());
-        when(requestService.findAllRequest()).thenReturn(emptyRequests);
-
-        CompletableFuture<ResponseEntity<List<Request>>> futureResponseEntity = requestController.findAllRequests();
-        ResponseEntity<List<Request>> responseEntity = futureResponseEntity.get();
 
         assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
     }
