@@ -3,7 +3,6 @@ package id.ac.ui.cs.advprog.requestbarang.service;
 import id.ac.ui.cs.advprog.requestbarang.model.RequestModel;
 import id.ac.ui.cs.advprog.requestbarang.repository.RequestRepository;
 import id.ac.ui.cs.advprog.requestbarang.service.impl.RequestServiceImpl;
-
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.client.RestTemplate;
@@ -41,6 +40,12 @@ public class RequestServiceTest {
         request1.setName("Kaito Kid Figure");
         request1.setHarga(1000000);
         request1.setCurrency("IDR");
+        request1.setProductId(123L);
+        request1.setUsername("user123");
+        request1.setDeskripsi("ori");
+        request1.setImageLink("image.com");
+        request1.setStoreLink("store.com");
+        request1.setStatus(false);
         service.addRequest(request1);
 
         request2 = new RequestModel();
@@ -48,6 +53,12 @@ public class RequestServiceTest {
         request2.setName("Kaito Kid Keychain");
         request2.setHarga(100000);
         request2.setCurrency("IDR");
+        request2.setProductId(123L);
+        request2.setUsername("user123");
+        request2.setDeskripsi("lucu");
+        request2.setImageLink("image.com");
+        request2.setStoreLink("store.com");
+        request2.setStatus(false);
         service.addRequest(request2);
     }
 

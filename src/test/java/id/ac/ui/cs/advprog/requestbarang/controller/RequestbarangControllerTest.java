@@ -7,9 +7,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -18,6 +20,7 @@ import java.util.concurrent.ExecutionException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+@AutoConfigureMockMvc
 class RequestControllerTest {
 
     @Mock
@@ -83,5 +86,60 @@ class RequestControllerTest {
         assertEquals(2, responseEntity.getBody().size());
     }
 
+    @Test
+    void findById_ReturnsNotFound() throws ExecutionException, InterruptedException {
+        CompletableFuture<ResponseEntity<RequestModel>> futureResponseEntity = requestController.findById(999L); // Using a non-existent ID
+        ResponseEntity<RequestModel> responseEntity = futureResponseEntity.get();
 
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+    }
+
+    @Test
+    void updateRequest_ReturnsUpdatedRequest() throws ExecutionException, InterruptedException {
+        RequestModel updatedRequest = new RequestModel(1L, 1L, "user123",10000, "IDR", "pulpen kaito kid", "pulpen sarasa", "image", "toko", false);
+        CompletableFuture<ResponseEntity<RequestModel>> successResponse = CompletableFuture.completedFuture(ResponseEntity.ok(updatedRequest));
+        when(requestService.updateRequest(any(RequestModel.class))).thenReturn(updatedRequest);
+
+        CompletableFuture<ResponseEntity<RequestModel>> futureResponseEntity = requestController.updateRequest(updatedRequest.getId(), updatedRequest);
+        ResponseEntity<RequestModel> responseEntity = futureResponseEntity.get();
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(1L, responseEntity.getBody().getId());
+        assertEquals("pulpen kaito kid", responseEntity.getBody().getName());
+        assertEquals(10000, responseEntity.getBody().getHarga());
+    }
+
+    @Test
+    void updateRequest_ReturnsNotFound() throws ExecutionException, InterruptedException {
+        RequestModel updatedRequest = new RequestModel(999L, 1L, "user123", 3000000, "IDR", "hang glider kaito kid", "bisa terbang", "image", "toko", false);
+        when(requestService.updateRequest(any(RequestModel.class))).thenThrow(new IllegalArgumentException());
+
+        CompletableFuture<ResponseEntity<RequestModel>> futureResponseEntity = requestController.updateRequest(updatedRequest.getId(), updatedRequest);
+        ResponseEntity<RequestModel> responseEntity = futureResponseEntity.get();
+
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+    }
+
+    @Test
+    void deleteRequest_Success() throws ExecutionException, InterruptedException {
+        long requestId = 1L;
+        CompletableFuture<ResponseEntity<Void>> successResponse = CompletableFuture.completedFuture(ResponseEntity.ok().build());
+        doNothing().when(requestService).deleteRequest(requestId);
+
+        CompletableFuture<ResponseEntity<Void>> futureResponseEntity = requestController.deleteRequest(requestId);
+        ResponseEntity<Void> responseEntity = futureResponseEntity.get();
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    }
+
+    @Test
+    void deleteRequest_Fail() throws ExecutionException, InterruptedException {
+        long requestId = 999L;
+        doThrow(new RuntimeException()).when(requestService).deleteRequest(requestId);
+
+        CompletableFuture<ResponseEntity<Void>> futureResponseEntity = requestController.deleteRequest(requestId);
+        ResponseEntity<Void> responseEntity = futureResponseEntity.get();
+
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+    }
 }
