@@ -3,6 +3,7 @@ on:
     push:
         branches:
             - main
+            - frontend/proof-of-concept
 
 jobs:
     deploy:
@@ -15,6 +16,6 @@ jobs:
                 echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
                 ssh-keyscan -H aldenluth.fi > ~/.ssh/known_hosts
             - name: Connect and deploy
-              run: ssh root@aldenluth.fi "cd advprog/requestbarang && git pull --ff-only && ./gradlew build && docker compose up -d --build && docker system prune -a -f"
+              run: ssh root@aldenluth.fi "cd requestbarang && git pull --ff-only && ./gradlew build && docker compose up -d --build && docker system prune -a -f"
             - name: Cleanup
               run: rm -rf ~/.ssh

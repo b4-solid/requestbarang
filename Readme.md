@@ -1,0 +1,2 @@
+Dalam service request barang, rencananya saya akan menggunakan beberapa design pattern yaitu :
+Factory pattern : digunakan untuk membuat object request pelanggan dengan mengambil data input dan membuat objek request yang sesuai
